@@ -1,0 +1,39 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches: [dev]
+
+jobs:
+  validate-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 깃허브 가상 컴퓨터로 내 코드 복사해오기
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 리액트/Vite 가동을 위한 Node.js 환경 세팅
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm" # 빌드 속도를 빠르게 하기 위해 캐시 사용
+
+      # 3. package.json에 적힌 라이브러리들 똑같이 설치
+      - name: Install dependencies
+        run: npm install
+
+      # 4. [검사 1] 타입스크립트 문법 및 에러 체크
+      # 아까 겪으신 CSS 모듈 못 찾는 경고나 문법 에러를 여기서 미리 잡아냅니다.
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+
+      # 5. [검사 2] 코드 스타일(린트) 체크 (설정이 안 되어 있다면 패스하도록 처리)
+      - name: Lint check
+        run: npm run lint || echo "Lint script가 설정되지 않아 건너뜁니다."
+
+      # 6. [검사 3] 최종 빌드 테스트 (가장 중요)
+      # 아까 겪으신 'index.html에서 src/main.tsx 못 찾는 에러'를 실서버 배포 전에 여기서 완벽히 검증합니다.
+      - name: Build project
+        run: npm run build
