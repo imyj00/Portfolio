@@ -1,4 +1,4 @@
-name: Frontend CI
+name: Portfolio CI
 
 on:
   pull_request:
