@@ -27,7 +27,7 @@ jobs:
       # 4. [검사 1] 타입스크립트 문법 및 에러 체크
       # 아까 겪으신 CSS 모듈 못 찾는 경고나 문법 에러를 여기서 미리 잡아냅니다.
       - name: TypeScript type check
-        run: npx -p typescript tsc --noEmit
+        run: npm run type-check
 
       # 5. [검사 2] 코드 스타일(린트) 체크 (설정이 안 되어 있다면 패스하도록 처리)
       - name: Lint check
